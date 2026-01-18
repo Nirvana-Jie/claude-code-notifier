@@ -6,11 +6,14 @@ INPUT=$(cat)
 TITLE="Claude Code"
 SOUND="Ping"
 
-# Parse JSON and generate message
+# Parse JSON and generate message (use base64 to avoid injection)
+INPUT_B64=$(echo -n "$INPUT" | base64)
 MESSAGE=$(python3 -c "
 import json
+import base64
+import sys
 try:
-    data = json.loads('''$INPUT''')
+    data = json.loads(base64.b64decode('$INPUT_B64').decode('utf-8'))
     event = data.get('hook_event_name', '')
     ntype = data.get('notification_type', '')
 
@@ -56,10 +59,13 @@ case "$TERM_PROGRAM" in
     "iTerm.app")      TID="com.googlecode.iterm2" ;;
     "Apple_Terminal") TID="com.apple.Terminal" ;;
     "vscode")         TID="com.microsoft.VSCode" ;;
+    "cursor")         TID="com.todesktop.230313mzl4w4u92" ;;
     "WarpTerminal")   TID="dev.warp.Warp-Stable" ;;
     "Hyper")          TID="co.zeit.hyper" ;;
     "Alacritty")      TID="org.alacritty" ;;
     "kitty")          TID="net.kovidgoyal.kitty" ;;
+    "Tabby")          TID="org.tabby" ;;
+    "WezTerm")        TID="com.github.wez.wezterm" ;;
     *)                TID="com.apple.Terminal" ;;
 esac
 

@@ -7,7 +7,8 @@ macOS notifications for [Claude Code](https://claude.ai/code) - get notified whe
 - 🔔 System notifications when Claude needs approval or input
 - 🖱️ Click notification to return to terminal
 - 📝 Shows specific action: "Do you want to make this edit to config.js?"
-- 🖥️ Supports: iTerm2, Terminal.app, VS Code, Warp, Hyper, Alacritty, kitty
+- 🖥️ Supports: iTerm2, Terminal.app, VS Code, Cursor, Warp, Hyper, Alacritty, kitty, Tabby, WezTerm
+- 🔒 Script signature verification for security
 
 ## Installation
 
@@ -32,11 +33,19 @@ cd claude-code-notifier
 brew upgrade claude-code-notifier
 ```
 
+Or for manual installation:
+
+```bash
+cd claude-code-notifier
+git pull
+./install.sh
+```
+
 ## Uninstall
 
 ```bash
 brew uninstall claude-code-notifier
-# or
+# or for manual installation
 ./uninstall.sh
 ```
 
@@ -45,8 +54,11 @@ brew uninstall claude-code-notifier
 After installation, test immediately:
 
 ```bash
-# Send a test notification
-claude-code-notify
+# For Homebrew installation
+echo '{"hook_event_name":"Notification","notification_type":"idle_prompt"}' | claude-code-notify
+
+# For manual installation (run from project directory)
+echo '{"hook_event_name":"Notification","notification_type":"idle_prompt"}' | ./bin/notify.sh
 
 # Or run Claude and ask it to create a file
 claude
@@ -71,13 +83,52 @@ Uses Claude Code's [hooks system](https://code.claude.com/docs/en/hooks):
 | Edit file | "Do you want to make this edit to app.js?" |
 | Run command | "Run: npm install" |
 | Read file | "Read config.json?" |
+| Subtask | "Task: analyze the codebase" |
 | Web fetch | "Fetch: https://api.example.com" |
+| Web search | "Search: python async tutorial" |
+| Idle | "Claude is waiting for input" |
+
+## Supported Terminals
+
+| Terminal | Click to Activate |
+|----------|-------------------|
+| iTerm2 | ✅ |
+| Terminal.app | ✅ |
+| VS Code | ✅ |
+| Cursor | ✅ |
+| Warp | ✅ |
+| Hyper | ✅ |
+| Alacritty | ✅ |
+| kitty | ✅ |
+| Tabby | ✅ |
+| WezTerm | ✅ |
+
+> **Note**: Click-to-activate requires `terminal-notifier`. Without it, notifications still work but clicking won't focus the terminal.
 
 ## Requirements
 
 - macOS
 - [Claude Code](https://claude.ai/code) CLI
 - Python 3
+
+## Troubleshooting
+
+### Notifications not appearing?
+
+1. Check System Settings → Notifications → Script Editor (or terminal-notifier)
+2. Ensure notifications are enabled
+
+### Click doesn't activate terminal?
+
+Install terminal-notifier:
+
+```bash
+brew install terminal-notifier
+```
+
+### Reinstalling after path change?
+
+The installer automatically updates existing hooks when paths change (e.g., switching from manual to Homebrew installation).
 
 ## License
 
