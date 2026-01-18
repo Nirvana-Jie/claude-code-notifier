@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Backups
+*.backup
+
+# Local Claude settings
+.claude/settings.local.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Test outputs
+test-output.txt
+test.txt
+*.tmp
